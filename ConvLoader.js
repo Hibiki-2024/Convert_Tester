@@ -1,4 +1,3 @@
-//変換表取得
 const ConversionLoader = (() => {
   let conversionTable = {}; //変換表(内部で管理)
   let isLoaded = false; //読み込み状態管理
