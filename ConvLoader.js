@@ -1,11 +1,11 @@
-// 変換表取得
+//変換表取得
 const ConversionLoader = (() => {
-  let conversionTable = {}; // 変換表（内部で管理）
-  let isLoaded = false; // 読み込み状態管理
+  let conversionTable = {}; //変換表(内部で管理)
+  let isLoaded = false; //読み込み状態管理
 
-  // `.txt` を取得し、変換表をセットする
+  //'.txt`を取得し、変換表をセットする
   async function loadTable(url) {
-      if (isLoaded) return; // 既にロード済みならスキップ
+      if (isLoaded) return; //既にロード済みならスキップ
 
       try {
           const response = await fetch(url);
@@ -17,21 +17,21 @@ const ConversionLoader = (() => {
               conversionTable[num] = kanji;
           });
 
-          isLoaded = true; // ロード完了フラグ
-          console.log('🔹 変換表ロード完了:', conversionTable);
+          isLoaded = true; //ロード完了フラグ
+          console.log('変換表ロード完了:', conversionTable);
       } catch (error) {
-          console.error('❌ 変換表のロード失敗:', error);
+          console.error('変換表のロード失敗:', error);
       }
   }
 
-  // 数値を変換する関数
+  //数値を変換する関数
   function convert(input) {
       return conversionTable[input] || '不明';
   }
 
-  // 外部に公開するメソッド
+  //外部に公開するメソッド
   return {
-      loadTable,  // 変換表をロード
-      convert     // 数値を漢字に変換
+      loadTable,  //変換表をロード
+      convert     //数値を漢字に変換
   };
 })();
