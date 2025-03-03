@@ -25,5 +25,5 @@ let splitconvert = splitText.map(item => {
 console.log(Intext);
 console.log(splitText);
 console.log(splitconvert);
-const result = ConversionLoader.convert(splitconvert[1]);
+let result = ConversionLoader.convert();
 console.log(result);

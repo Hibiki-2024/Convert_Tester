@@ -34,3 +34,5 @@ const ConversionLoader = (() => {
       convert     //数値を漢字に変換
   };
 })();
+
+ConversionLoader.loadTable('NumToKanjiConvTable.txt');
