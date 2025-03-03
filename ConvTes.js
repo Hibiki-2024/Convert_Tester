@@ -1,39 +1,48 @@
 //変換表を読み込むクラス
 //変換表はNumToKanjiConvTable.txtに記述
 const ConversionLoader = (() => {
-  let conversionTable = {}; //変換表(内部で管理)
-  let isLoaded = false; //読み込み状態管理
+  let conversionTable = {};  //変換表（内部管理）
+  let isLoaded = false;      //ロード済みフラグ
+  let loadPromise = null;    // `.txt` ロードの Promise を管理
 
   //'.txt`を取得し、変換表をセットする
   async function loadTable(url) {
       if (isLoaded) return; //既にロード済みならスキップ
+      if (loadPromise) return loadPromise; // 読み込み中ならその Promise を返す
 
-      try {
-          const response = await fetch(url);
-          if (!response.ok) throw new Error(`Failed to load: ${url}`);
+      loadPromise = new Promise(async (resolve, reject) => {
+          try {
+              const response = await fetch(url);
+              if (!response.ok) throw new Error(`Failed to load: ${url}`);
 
-          const text = await response.text();
-          text.trim().split('\n').forEach(line => {
-              const [num, kanji] = line.split(/\s+/);
-              conversionTable[num] = kanji;
-          });
+              const text = await response.text();
+              text.trim().split('\n').forEach(line => {
+                  const [num, kanji] = line.split(/\s+/);
+                  conversionTable[num] = kanji;
+              });
 
-          isLoaded = true; //ロード完了フラグ
-          console.log('変換表ロード完了:', conversionTable);
-      } catch (error) {
-          console.error('変換表のロード失敗:', error);
-      }
+              isLoaded = true;
+              console.log('変換表ロード完了:', conversionTable);
+              resolve(); // 読み込み完了
+          } catch (error) {
+              console.error('変換表のロード失敗:', error);
+              reject(error);
+          }
+      });
+
+      return loadPromise;
   }
 
-  //数値を変換する関数
-  function convert(input) {
+  //数値を変換（ロード完了を待機）
+  async function convert(input) {
+      await loadTable('conversionTable.txt'); //読み込みが完了するまで待機
       return conversionTable[input] || '不明';
   }
 
   //外部に公開するメソッド
   return {
       loadTable,  //変換表をロード
-      convert     //数値を漢字に変換
+      convert     //数値を漢字に変換（ロード完了を待機）
   };
 })();
 
@@ -66,5 +75,5 @@ let splitconvert = splitText.map(item => {
 console.log(Intext);
 console.log(splitText);
 console.log(splitconvert);
-let result = ConversionLoader.convert(6);
+let result = ConversionLoader.convert(splitconvert);
 console.log(result);
