@@ -1,3 +1,12 @@
+// Unicode エスケープ変換関数 ChatGPT製
+function CTE16(input) {
+  // 入力文字列全体をループして文字コードを変換
+  return input.split('').map(char => {
+    const codePoint = char.codePointAt(0);
+    return '\\u' + ('0000' + codePoint.toString(16)).slice(-4);
+  }).join('');
+}
+
 //テスト用の文章
 const TestText = "あいうえ音楽\nこんこんきーつね\n\nステラsteller⭐️";
 const Intext = CTE16(TestText);
@@ -16,14 +25,5 @@ let splitconvert = splitText.map(item => {
 console.log(Intext);
 console.log(splitText);
 console.log(splitconvert);
-const result = ConversionLoader.convert(6);
+const result = ConversionLoader.convert(splitconvert[1]);
 console.log(result);
-
-// Unicode エスケープ変換関数 ChatGPT製
-function CTE16(input) {
-  // 入力文字列全体をループして文字コードを変換
-  return input.split('').map(char => {
-    const codePoint = char.codePointAt(0);
-    return '\\u' + ('0000' + codePoint.toString(16)).slice(-4);
-  }).join('');
-}
