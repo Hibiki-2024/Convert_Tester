@@ -5,7 +5,7 @@ const ConversionLoader = (() => {
   let isLoaded = false;      //ロード済みフラグ
   let loadPromise = null;    // `.txt` ロードの Promise を管理
 
-  //'.txt`を取得し、変換表をセットする
+  //'.txt'を取得し、変換表をセットする
   async function loadTable(url) {
       if (isLoaded) return; //既にロード済みならスキップ
       if (loadPromise) return loadPromise; // 読み込み中ならその Promise を返す
@@ -36,13 +36,19 @@ const ConversionLoader = (() => {
   //数値を変換（ロード完了を待機）
   async function convert(input) {
       await loadTable('conversionTable.txt'); //読み込みが完了するまで待機
-      return conversionTable[input] || '不明';
+      return conversionTable[String(input)] || '不明';
   }
 
-  //外部に公開するメソッド
+  //配列の数値を一括変換（ロード完了を待機）
+  async function convertMultiple(inputs) {
+      await loadTable('conversionTable.txt');
+      return inputs.map(num => conversionTable[String(num)] || '不明');
+  }
+
   return {
       loadTable,  //変換表をロード
-      convert     //数値を漢字に変換（ロード完了を待機）
+      convert,     //単一の数値を漢字に変換（ロード完了を待機）
+      convertMultiple,  //配列の数値を漢字に一括変換（ロード完了を待機）
   };
 })();
 
