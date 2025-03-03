@@ -81,5 +81,5 @@ let splitconvert = splitText.map(item => {
 console.log(Intext);
 console.log(splitText);
 console.log(splitconvert);
-let result = ConversionLoader.convert(splitconvert);
+let result = ConversionLoader.convertMultiple(splitconvert);
 console.log(result);
