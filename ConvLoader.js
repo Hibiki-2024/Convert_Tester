@@ -1,17 +1,14 @@
-//変換表を読み込むクラス
-//変換表はNumToKanjiConvTable.txtに記述
 const ConversionLoader = (() => {
   let conversionTable = {};  //変換表（内部管理）
   let isLoaded = false;      //ロード済みフラグ
-  let loadPromise = null;    // `.txt` ロードの Promise を管理
+  let initPromise = null;    // 初期化Promise
 
   //'.txt'を取得し、変換表をセットする
   async function loadTable(url) {
-      if (isLoaded) return; //既にロード済みならスキップ
-      if (loadPromise) return loadPromise; // 読み込み中ならその Promise を返す
+      if (isLoaded) return conversionTable;
+      if (initPromise) return initPromise;
 
-      // `.txt` のデータを非同期で取得
-      loadPromise = new Promise(async (resolve, reject) => {
+      initPromise = new Promise(async (resolve, reject) => {
           try {
               const response = await fetch(url);
               if (!response.ok) throw new Error(`Failed to load: ${url}`);
@@ -24,33 +21,44 @@ const ConversionLoader = (() => {
 
               isLoaded = true;
               console.log('変換表ロード完了:', conversionTable);
-              resolve(); // 読み込み完了
+              resolve(conversionTable);
           } catch (error) {
               console.error('変換表のロード失敗:', error);
               reject(error);
           }
       });
 
-      return loadPromise; // 読み込み完了後の Promise を返す
+      return initPromise;
   }
 
   //数値を変換（ロード完了を待機）
   async function convert(input) {
-      await loadTable('conversionTable.txt'); //読み込みが完了するまで待機
-      return conversionTable[String(input)] || '不明';
+      const table = await loadTable('NumToKanjiConvTable.txt');
+      return table[String(input)] || '不明';
   }
 
   //配列の数値を一括変換（ロード完了を待機）
   async function convertMultiple(inputs) {
-      await loadTable('conversionTable.txt');
-      return inputs.map(num => conversionTable[String(num)] || '不明');
+      const table = await loadTable('NumToKanjiConvTable.txt');
+      return inputs.map(num => table[String(num)] || '不明');
   }
 
   return {
-      loadTable,  //変換表をロード
-      convert,     //単一の数値を漢字に変換（ロード完了を待機）
-      convertMultiple,  //配列の数値を漢字に一括変換（ロード完了を待機）
+      loadTable,
+      convert,
+      convertMultiple,
+      isReady: () => isLoaded
   };
 })();
 
-ConversionLoader.loadTable('NumToKanjiConvTable.txt');
+// 初期ロードを待機してからエクスポート
+// このPromiseが完了するまでモジュールを使用できないようにする
+window.convLoaderReady = ConversionLoader.loadTable('NumToKanjiConvTable.txt')
+  .then(() => {
+      console.log('変換ローダーの準備完了');
+      return ConversionLoader;
+  })
+  .catch(error => {
+      console.error('初期ロードエラー:', error);
+      throw error;
+  });
