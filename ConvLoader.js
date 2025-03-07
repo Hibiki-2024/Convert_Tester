@@ -10,6 +10,7 @@ const ConversionLoader = (() => {
       if (isLoaded) return; //既にロード済みならスキップ
       if (loadPromise) return loadPromise; // 読み込み中ならその Promise を返す
 
+      // `.txt` のデータを非同期で取得
       loadPromise = new Promise(async (resolve, reject) => {
           try {
               const response = await fetch(url);
@@ -30,7 +31,7 @@ const ConversionLoader = (() => {
           }
       });
 
-      return loadPromise;
+      return loadPromise; // 読み込み完了後の Promise を返す
   }
 
   //数値を変換（ロード完了を待機）
