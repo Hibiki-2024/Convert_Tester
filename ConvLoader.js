@@ -1,3 +1,5 @@
+//変換表を読み込むクラス
+//変換表はNumToKanjiConvTable.txtに記述
 const ConversionLoader = (() => {
   let conversionTable = {};  //変換表（内部管理）
   let isLoaded = false;      //ロード済みフラグ
@@ -49,3 +51,5 @@ const ConversionLoader = (() => {
       convertMultiple,  //配列の数値を漢字に一括変換（ロード完了を待機）
   };
 })();
+
+ConversionLoader.loadTable('NumToKanjiConvTable.txt');
