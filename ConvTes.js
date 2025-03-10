@@ -25,6 +25,8 @@ const TestText = "あいうえ音楽\nこんこんきーつね\n\nステラstell
 
 //メイン処理を非同期関数として定義
 async function main(input, key) {
+    console.log('処理開始:', input);
+    console.log('暗号鍵:', key);
     // ユニコード変換
     const Intext = CTE16(input);
     //入力を2文字ごとに分割
@@ -39,16 +41,14 @@ async function main(input, key) {
             return parseInt(item, 16);
         }
     });
-    console.log(Intext);
-    console.log(splitText);
-    console.log(splitconvert);
+    // console.log(Intext);
+    // console.log(splitText);
+    // console.log(splitconvert);
 
     // 変換表のロード完了を待ってから実行
     await window.convLoaderReady;
     let result = await ConversionLoader.convertMultiple(splitconvert, key);
-    console.log(result);
     console.log(result.join(''));
-    console.log(key);
     return result.join('');
 }
 
