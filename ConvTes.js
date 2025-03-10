@@ -48,6 +48,7 @@ async function main(input, key) {
     let result = await ConversionLoader.convertMultiple(splitconvert, key);
     console.log(result);
     console.log(result.join(''));
+    console.log(Key);
     return result.join('');
 }
 
