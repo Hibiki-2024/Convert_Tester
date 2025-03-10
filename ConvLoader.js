@@ -38,9 +38,9 @@ const ConversionLoader = (() => {
   }
 
   //配列の数値を一括変換（ロード完了を待機）
-  async function convertMultiple(inputs) {
+  async function convertMultiple(inputs, key) {
       const table = await loadTable('NumToKanjiConvTable.txt');
-      return inputs.map(num => table[String(num)] || '不明');
+      return inputs.map(num => table[String(num + key)] || '不明');
   }
 
   return {
