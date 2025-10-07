@@ -47,7 +47,7 @@ const mainProcessing = async (input, key) => {
     const splitConverted = splitAndConvertInput(inputText);
     // 変換表のロード完了を待ってから実行
     await window.conversionLoaderReady;
-    let result = await ConversionLoader.convertMultiple(splitConverted, key);
+    let result = await window.ConversionLoader.convertMultiple(splitConverted, key);
     console.log(result.join(''));
     return result.join('');
 }
