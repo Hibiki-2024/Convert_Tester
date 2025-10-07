@@ -2,7 +2,7 @@
 // - サロゲートペアを正しく扱うために code point ごとに反復します
 // - 情報欠落を防ぐため、16進は最大 6 桁でゼロ埋め（例: U+1F60A -> "\\u01f60a"）
 // - 出力は各文字ごとに固定長 ("\\u" + 6 hex) になるため、後続の2文字ずつ分割ロジックと互換を保ちます
-function CTE16(input) {
+function ConvToUniEs16(input) {
     if (!input) return '';
     // Array.from または for..of は文字列を Unicode の code point 単位で反復します
     return Array.from(input).map(char => {
@@ -15,7 +15,7 @@ function CTE16(input) {
 }
 
 // 暗号鍵生成関数 ChatGPT製
-function getFairRandomNumber() {
+function getFairRndNum() {
     const maxValid = 4294967296 - (4294967296 % 9794); // 4294967296 は 2^32
     let num;
     do {
