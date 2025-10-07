@@ -14,8 +14,8 @@ function ConvToUniEs16(input) {
     }).join('');
 }
 
-// 暗号鍵生成関数 ChatGPT製
-function getFairRndNum() {
+// 暗号鍵生成関数
+function generateRandomKey() {
     const maxValid = 4294967296 - (4294967296 % 9794); // 4294967296 は 2^32
     let num;
     do {
@@ -26,38 +26,33 @@ function getFairRndNum() {
     return num % 9794; // 0 ~ 9793
 }
 
-const ConvKey = getFairRandomNumber();
+// 入力を2文字ごとに分割し、変換する関数
+function splitAndConvert(input) {
+    const splitText = input.match(/.{1,2}/g);
+    return splitText.map(item => {
+        if (item === '\\u') return 256;
+        // \\u以外は16進数→10進数に変換
+        return parseInt(item, 16);
+    });
+}
 
-const TestText = "あいうえ音楽\nこんこんきーつね\n\nステラsteller⭐️";
-
-//メイン処理を非同期関数として定義
+// メイン処理を非同期関数として定義
 async function main(input, key) {
     console.log('処理開始:', input);
     console.log('暗号鍵:', key);
     // ユニコード変換
-    const Intext = CTE16(input);
-    //入力を2文字ごとに分割
-    const splitText = Intext.match(/.{1,2}/g);
-
-    //配列を展開
-    let splitconvert = splitText.map(item => {
-        if (item === '\\u') {
-            return 256; // \\uは256に置き換え
-        } else {
-            // \\u以外は16進数→10進数に変換
-            return parseInt(item, 16);
-        }
-    });
-    // console.log(Intext);
-    // console.log(splitText);
-    // console.log(splitconvert);
-
+    const Intext = ConvToUniEs16(input);
+    const splitconvert = splitAndConvert(Intext);
     // 変換表のロード完了を待ってから実行
     await window.convLoaderReady;
     let result = await ConversionLoader.convertMultiple(splitconvert, key);
     console.log(result.join(''));
     return result.join('');
 }
+
+const ConvKey = generateRandomKey();
+
+const TestText = "あいうえ音楽\nこんこんきーつね\n\nステラsteller⭐️";
 
 // メイン処理を実行
 main(TestText, ConvKey).catch(error => console.error('処理エラー:', error));
