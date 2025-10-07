@@ -1,9 +1,16 @@
-// Unicode エスケープ変換関数 ChatGPT製
+// Unicode エスケープ変換関数（修正版）
+// - サロゲートペアを正しく扱うために code point ごとに反復します
+// - 情報欠落を防ぐため、16進は最大 6 桁でゼロ埋め（例: U+1F60A -> "\\u01f60a"）
+// - 出力は各文字ごとに固定長 ("\\u" + 6 hex) になるため、後続の2文字ずつ分割ロジックと互換を保ちます
 function CTE16(input) {
-    // 入力文字列全体をループして文字コードを変換
-    return input.split('').map(char => {
+    if (!input) return '';
+    // Array.from または for..of は文字列を Unicode の code point 単位で反復します
+    return Array.from(input).map(char => {
         const codePoint = char.codePointAt(0);
-        return '\\u' + ('0000' + codePoint.toString(16)).slice(-4);
+        // 最大 U+10FFFF に対応するため 6 桁でゼロ埋め
+        const hex = codePoint.toString(16);
+        const padded = ('000000' + hex).slice(-6);
+        return '\\u' + padded;
     }).join('');
 }
 
