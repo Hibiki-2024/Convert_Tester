@@ -1,12 +1,12 @@
 # Convert_Tester
 
 ## 概要
-Convert_Testerは、テキストをUnicodeエスケープシーケンスに変換し、さらに独自の変換表（NumToKanjiConvTable.txt）を用いて別の文字列へと変換するサンプルアプリケーションです。暗号鍵（ランダムな数値）を用いて変換結果を変化させることができます。
+Convert_Testerは、テキストをUnicodeエスケープシーケンスに変換し、埋め込みの変換表（`ConversionData.js` の `CONVERSION_TABLE`）を用いて別の文字列へと変換するサンプルアプリケーションです。暗号鍵（ランダムな数値）を用いて変換結果を変化させることができます。
 
 ## 主な処理の流れ
 
 1. **変換表のロード**  
-   ConvLoader.jsがNumToKanjiConvTable.txtを読み込み、数値と漢字の対応表を作成します。
+   ConvLoader相当の処理は廃止され、`ConversionData.js` の `CONVERSION_TABLE` を直接参照します（埋め込みデータがデフォルト）。
 
 2. **テキストのUnicodeエスケープ変換**  
    ConvTes.jsのCTE16関数で、入力テキストをUnicodeエスケープ（例: "あ" → "\u3042"）に変換します。
@@ -22,17 +22,14 @@ Convert_Testerは、テキストをUnicodeエスケープシーケンスに変�
 
 ## ファイル構成
 
-- `index.html`  
-  メインHTML。ConvLoader.jsとConvTes.jsを読み込みます。
+ - `index.html`  
+   メインHTML。`ConversionData.js` と `ConvTes.js` を読み込みます。
 
-- `ConvLoader.js`  
-  変換表のロードと変換処理を担当します。
+ - `ConvTes.js`  
+   テキストのエスケープ・分割・変換処理のメインロジックです。
 
-- `ConvTes.js`  
-  テキストのエスケープ・分割・変換処理のメインロジックです。
-
-- `NumToKanjiConvTable.txt`  
-  数値と漢字の対応表です。
+ - `ConversionData.js`  
+   変換表（`CONVERSION_TABLE`）を埋め込みで保持します。
 
 ## 使い方
 

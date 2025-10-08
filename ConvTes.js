@@ -45,9 +45,12 @@ const mainProcessing = async (input, key) => {
     // ユニコード変換
     const inputText = convertToUnicodeEscape16(input);
     const splitConverted = splitAndConvertInput(inputText);
-    // 変換表のロード完了を待ってから実行
-    await window.conversionLoaderReady;
-    let result = await window.ConversionLoader.convertMultiple(splitConverted, key);
+    // ConversionData.js の CONVERSION_TABLE を直接使用して変換
+    // 変換ルックアップ関数（同期）
+    const convertValue = (num) => {
+        return (CONVERSION_TABLE[String(num)] || '不明');
+    };
+    const result = splitConverted.map(n => convertValue(n + key));
     console.log(result.join(''));
     return result.join('');
 }
