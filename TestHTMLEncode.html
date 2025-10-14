@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <title>Unicode エンコード</title>
+    <link rel="stylesheet" href="TestHTML.css">
+  </head>
+  <body>
+    <header>
+      <h1>Unicode エンコード</h1>
+    </header>
+
+    <div class="container">
+      <h3>エンコードしたい文を入れて下さい</h3>
+
+      <div>
+        <textarea id="input" placeholder="この中に入力" name="input" rows="4"></textarea>
+        <button id="ConvertRun">エンコードする</button>
+      </div>
+
+      <div id="result-area" class="result-card" style="display: none;">
+        <h5>結果:</h5>
+        <p id="result-text"></p>
+      </div>
+    </div>
+
+    <script>
+      'use strict';
+      const PlainTextEntry = document.getElementById('input');
+      const Convert = document.getElementById('ConvertRun');
+      const resultDivision = document.getElementById('result-area');
+
+      // Unicode エスケープ変換関数
+    function convertToUnicodeEscape(input) {
+      // 入力文字列全体をループして文字コードを変換
+    return input.split('').map(char => {
+      const codePoint = char.codePointAt(0);
+      return '\\u' + ('0000' + codePoint.toString(16)).slice(-4);
+    }).join('');
+}
+
+      Convert.addEventListener('click', () => {
+        const inputText = PlainTextEntry.value;
+        if (inputText.length === 0) {
+          alert("入力してください");
+          return;
+        }
+
+        // 結果表示エリアの作成
+        resultDivision.style.display = 'block'; // 結果エリアを表示
+
+        const headerDivision = document.createElement('div');
+        headerDivision.style.backgroundColor = '#f8f9fa';
+        headerDivision.style.padding = '10px';
+        headerDivision.style.fontSize = '18px';
+        headerDivision.style.fontWeight = 'bold';
+        headerDivision.style.borderBottom = '1px solid #ccc';
+        headerDivision.innerText = '結果';
+
+        const bodyDivision = document.createElement('div');
+        bodyDivision.style.padding = '15px';
+
+        const paragraph = document.createElement('p');
+        paragraph.style.fontSize = '16px';
+        paragraph.style.color = '#333';
+
+        // 入力テキストをUnicodeエスケープシーケンスに変換
+        const result = convertToUnicodeEscape(inputText);
+
+        paragraph.innerText = result;
+        bodyDivision.appendChild(paragraph);
+
+        // 結果エリアに追加
+        resultDivision.innerHTML = ''; // 既存の内容をクリア
+        resultDivision.appendChild(headerDivision);
+        resultDivision.appendChild(bodyDivision);
+      });
+    </script>
+  </body>
+</html>

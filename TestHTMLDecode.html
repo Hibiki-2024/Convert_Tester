@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <title>Unicode デコード</title>
+    <link rel="stylesheet" href="TestHTML.css">
+  </head>
+  <body>
+    <header>
+      <h1>Unicode デコード</h1>
+    </header>
+
+    <div class="container">
+      <h3>デコードしたいUnicodeエスケープ文字列を入力してください</h3>
+
+      <div>
+        <textarea id="input" placeholder="例: \\u3042\\u3044\\u3046" name="input" rows="4"></textarea>
+        <button id="ConvertRun">デコードする</button>
+      </div>
+
+      <div id="result-area" class="result-card" style="display: none;">
+        <h5>結果:</h5>
+        <p id="result-text"></p>
+      </div>
+    </div>
+
+    <script>
+      'use strict';
+      const PlainTextEntry = document.getElementById('input');
+      const Convert = document.getElementById('ConvertRun');
+      const resultDivision = document.getElementById('result-area');
+
+      // Unicode エスケープデコード関数
+      function decodeUnicodeEscape(input) {
+        return input.replace(/\\u([\dA-Fa-f]{4})/g, (match, p1) => {
+          return String.fromCharCode(parseInt(p1, 16));
+        });
+      }
+
+      Convert.addEventListener('click', () => {
+        const inputText = PlainTextEntry.value;
+        if (inputText.length === 0) {
+          alert("入力してください");
+          return;
+        }
+
+        // 結果表示エリアの作成
+        resultDivision.style.display = 'block'; // 結果エリアを表示
+
+        const headerDivision = document.createElement('div');
+        headerDivision.style.backgroundColor = '#f8f9fa';
+        headerDivision.style.padding = '10px';
+        headerDivision.style.fontSize = '18px';
+        headerDivision.style.fontWeight = 'bold';
+        headerDivision.style.borderBottom = '1px solid #ccc';
+        headerDivision.innerText = '結果';
+
+        const bodyDivision = document.createElement('div');
+        bodyDivision.style.padding = '15px';
+
+        const paragraph = document.createElement('p');
+        paragraph.style.fontSize = '16px';
+        paragraph.style.color = '#333';
+        // 入力テキストをデコード
+        const decodedText = decodeUnicodeEscape(inputText);
+
+        paragraph.innerText = decodedText;
+        bodyDivision.appendChild(paragraph);
+
+        // 結果エリアに追加
+        resultDivision.innerHTML = ''; // 既存の内容をクリア
+        resultDivision.appendChild(headerDivision);
+        resultDivision.appendChild(bodyDivision);
+      });
+    </script>
+  </body>
+</html>
